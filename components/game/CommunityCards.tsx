@@ -8,6 +8,7 @@ interface Props {
   phase: GamePhase
   pot: number
   lang: 'zh' | 'en'
+  compact?: boolean
 }
 
 const PHASE_LABELS = {
@@ -15,7 +16,7 @@ const PHASE_LABELS = {
   en: { preflop: 'Pre-Flop', flop: 'Flop', turn: 'Turn', river: 'River', showdown: 'Showdown', waiting: '', ended: '' },
 }
 
-export default function CommunityCards({ cards, phase, pot, lang }: Props) {
+export default function CommunityCards({ cards, phase, pot, lang, compact }: Props) {
   const phaseLabel = PHASE_LABELS[lang][phase] ?? ''
 
   return (
@@ -23,19 +24,19 @@ export default function CommunityCards({ cards, phase, pot, lang }: Props) {
       {/* Phase label */}
       {phaseLabel && (
         <div className="font-semibold px-3 py-1 rounded-full"
-          style={{ background: '#0a2a18', color: '#7db87d', border: '1px solid #2d6a4f', letterSpacing: '1px', fontSize: 14 }}>
+          style={{ background: '#0a2a18', color: '#7db87d', border: '1px solid #2d6a4f', letterSpacing: '1px', fontSize: compact ? 11 : 14 }}>
           {phaseLabel}
         </div>
       )}
 
       {/* Community cards */}
-      <div className="flex gap-1.5 items-center">
+      <div className={`flex items-center ${compact ? 'gap-1' : 'gap-1.5'}`}>
         {[0, 1, 2, 3, 4].map((i) => (
           <PlayingCard
             key={i}
             card={cards[i]}
             faceDown={!cards[i]}
-            size="xl"
+            size={compact ? 'md' : 'xl'}
           />
         ))}
       </div>
@@ -43,8 +44,8 @@ export default function CommunityCards({ cards, phase, pot, lang }: Props) {
       {/* Pot */}
       <div className="flex items-center gap-2 px-4 py-1.5 rounded-full"
         style={{ background: '#0a2a18', border: '1px solid #2d6a4f' }}>
-        <span className="font-semibold" style={{ color: '#7db87d', fontSize: 14 }}>{lang === 'zh' ? '底池' : 'Pot'}</span>
-        <span className="font-bold" style={{ color: '#f0c040', fontSize: 18 }}>${pot.toLocaleString()}</span>
+        <span className="font-semibold" style={{ color: '#7db87d', fontSize: compact ? 12 : 14 }}>{lang === 'zh' ? '底池' : 'Pot'}</span>
+        <span className="font-bold" style={{ color: '#f0c040', fontSize: compact ? 14 : 18 }}>${pot.toLocaleString()}</span>
       </div>
     </div>
   )

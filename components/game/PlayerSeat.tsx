@@ -41,7 +41,7 @@ export default function PlayerSeat({ player, isCurrentTurn, showCards, isHuman, 
             : 'linear-gradient(145deg, #0f2a1a, #081810)',
           border: `2px solid ${borderColor}`,
           boxShadow: isCurrentTurn ? '0 0 12px rgba(240,192,64,0.4)' : 'none',
-          minWidth: compact ? 68 : isHuman ? 116 : 90,
+          minWidth: compact ? (isHuman ? 90 : 68) : isHuman ? 116 : 90,
         }}
       >
         {/* Avatar */}
@@ -98,12 +98,12 @@ export default function PlayerSeat({ player, isCurrentTurn, showCards, isHuman, 
           <PlayingCard
             card={showCards ? player.holeCards[0] : undefined}
             faceDown={!showCards}
-            size={compact ? 'sm' : isHuman ? 'xl' : 'md'}
+            size={compact ? (isHuman ? 'md' : 'sm') : isHuman ? 'xl' : 'md'}
           />
           <PlayingCard
             card={showCards ? player.holeCards[1] : undefined}
             faceDown={!showCards}
-            size={compact ? 'sm' : isHuman ? 'xl' : 'md'}
+            size={compact ? (isHuman ? 'md' : 'sm') : isHuman ? 'xl' : 'md'}
           />
         </div>
       )}

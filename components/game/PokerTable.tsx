@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useGameStore } from '@/lib/store/game-store'
 import { strings } from '@/lib/i18n/strings'
 import { HandRecord } from '@/lib/poker/game-engine'
@@ -80,6 +80,13 @@ export default function PokerTable() {
   const t = strings[lang]
   const [showHistory, setShowHistory] = useState(false)
   const [showReport, setShowReport] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const vpipMap = state ? computeVpipMap(state.handHistory) : {}
 
@@ -151,7 +158,7 @@ export default function PokerTable() {
       )}
 
       {/* Table area - relative positioned for absolute bot placement */}
-      <div className="relative flex-1" style={{ minHeight: 620 }}>
+      <div className="relative flex-1" style={{ minHeight: isMobile ? 380 : 620 }}>
 
         {/* Green felt table background */}
         <div className="absolute"
@@ -170,6 +177,7 @@ export default function PokerTable() {
             phase={phase}
             pot={pots}
             lang={lang}
+            compact={isMobile}
           />
         </div>
 
@@ -185,6 +193,7 @@ export default function PokerTable() {
                   showCards={phase === 'showdown'}
                   isHuman={false}
                   lang={lang}
+                  compact={isMobile}
                   vpip={vpipMap[bot.id]}
                 />
               ) : (
@@ -231,6 +240,7 @@ export default function PokerTable() {
             showCards={true}
             isHuman={true}
             lang={lang}
+            compact={isMobile}
             vpip={vpipMap[humanPlayer.id]}
           />
         </div>
