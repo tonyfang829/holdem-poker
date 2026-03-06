@@ -89,7 +89,7 @@ function StreetSection({ street, lang }: { street: StreetLog; lang: 'zh' | 'en' 
               const hasAmount = a.amount > 0
               return (
                 <div key={i} className="flex items-center gap-2 text-xs">
-                  <span style={{ color: a.isHuman ? '#f0c040' : '#c0c0c0', minWidth: 60 }}>{a.name ?? a.playerName}</span>
+                  <span style={{ color: a.isHuman ? '#f0c040' : '#c0c0c0', minWidth: 60 }}>{a.playerName}</span>
                   <span style={{ color: ACTION_COLOR[a.action] ?? '#aaa' }}>{actionText}</span>
                   {hasAmount && <span style={{ color: '#aaa' }}>${a.amount.toLocaleString()}</span>}
                   <span style={{ color: '#444', marginLeft: 'auto' }}>

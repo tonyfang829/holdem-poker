@@ -73,8 +73,8 @@ function computeScore(profile: HumanProfile, handHistory: HandRecord[], bigBlind
 
   // Aggression Factor /20 — optimal 1.5–3.0
   const af = profile.postflopCalls > 0
-    ? (profile.postflopBets + profile.postflopRaises) / profile.postflopCalls
-    : (profile.postflopBets + profile.postflopRaises > 0 ? 3.5 : 1.0)
+    ? profile.postflopBets / profile.postflopCalls
+    : (profile.postflopBets > 0 ? 3.5 : 1.0)
   let aggScore: number
   if (af >= 1.5 && af <= 3.0) aggScore = 20
   else if ((af >= 1.0 && af < 1.5) || (af > 3.0 && af <= 4.5)) aggScore = 13
@@ -124,8 +124,8 @@ function detectLeaks(profile: HumanProfile): string[] {
   const n = profile.handsDealt
   if (n < 3) return leaks
   const vpip = profile.vpipHands / n
-  const af = profile.postflopCalls > 0 ? (profile.postflopBets + profile.postflopRaises) / profile.postflopCalls : 0
-  const postTotal = profile.postflopBets + profile.postflopRaises + profile.postflopCalls + profile.postflopFolds + profile.postflopChecks
+  const af = profile.postflopCalls > 0 ? profile.postflopBets / profile.postflopCalls : 0
+  const postTotal = profile.postflopBets + profile.postflopCalls + profile.postflopFolds + profile.postflopChecks
 
   if (vpip < 0.18) leaks.push('🔴 过度保守（Nit）：VPIP ' + pct(vpip) + '，弃牌太多，错失了大量利润机会。')
   if (vpip > 0.58) leaks.push('🔴 玩牌过松：VPIP ' + pct(vpip) + '，参与了太多底池，起手牌选择过于随意。')
@@ -148,7 +148,7 @@ function detectStrengths(profile: HumanProfile): string[] {
   const n = profile.handsDealt
   if (n < 3) return strengths
   const vpip = profile.vpipHands / n
-  const af = profile.postflopCalls > 0 ? (profile.postflopBets + profile.postflopRaises) / profile.postflopCalls : 0
+  const af = profile.postflopCalls > 0 ? profile.postflopBets / profile.postflopCalls : 0
 
   if (vpip >= 0.25 && vpip <= 0.42) strengths.push('✅ 起手牌选择合理：VPIP ' + pct(vpip) + '，参与手数健康。')
   if (profile.timesRaised >= 4) {
@@ -173,7 +173,7 @@ function generateActionPlan(profile: HumanProfile): string[] {
   if (n < 5) { plan.push('继续积累手数，获得更精确的统计分析。建议至少完成20手后查看报告。'); return plan }
 
   const vpip = profile.vpipHands / n
-  const af = profile.postflopCalls > 0 ? (profile.postflopBets + profile.postflopRaises) / profile.postflopCalls : 0
+  const af = profile.postflopCalls > 0 ? profile.postflopBets / profile.postflopCalls : 0
 
   if (vpip < 0.22) plan.push('📌 扩大起手牌范围：在按钮位（BTN）和截断位（CO）尝试加注 AXs、KJs+、QTs+、J9s+、T9s、98s 等同花连牌。')
   else if (vpip > 0.55) plan.push('📌 收紧起手牌选择：早期位置（UTG/MP）只打 TT+、AQ+；按钮位加入 77+、AJ+、KQ。')
@@ -473,7 +473,7 @@ export default function SessionReportModal({ handHistory, humanProfile, lang, bi
   const pfr = n > 0 ? pct(humanProfile.pfrHands / n) : '—'
   const ftr = humanProfile.timesRaised >= 4 ? pct(humanProfile.foldedToRaise / humanProfile.timesRaised) : '—'
   const af = humanProfile.postflopCalls > 0
-    ? ((humanProfile.postflopBets + humanProfile.postflopRaises) / humanProfile.postflopCalls).toFixed(2) : '—'
+    ? (humanProfile.postflopBets / humanProfile.postflopCalls).toFixed(2) : '—'
   const cbet = humanProfile.cbetOpportunities >= 2 ? pct(humanProfile.cbets / humanProfile.cbetOpportunities) : '—'
   const wtsd = humanProfile.showdowns >= 2 ? pct(humanProfile.showdownWins / humanProfile.showdowns) : '—'
 
