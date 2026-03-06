@@ -164,7 +164,7 @@ export default function PokerTable() {
           }} />
 
         {/* Community cards - center of table */}
-        <div className="absolute" style={{ top: '30%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <div className="absolute" style={{ top: '42%', left: '50%', transform: 'translate(-50%, -50%)' }}>
           <CommunityCards
             cards={communityCards}
             phase={phase}
